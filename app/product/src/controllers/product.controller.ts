@@ -11,8 +11,8 @@ const createProductHandler = async (req: Request, res: Response) => {
             return res.status(400).json({ message: error });
         }
 
-        log.info(`User registered successfully`);
-        return res.status(201).json({ message: "User created successfully", product });
+        log.info(`Product created successfully`);
+        return res.status(201).json({ message: "Product created successfully", product });
     } catch (error) {
         log.error({ message: "Product creation failed", error });
         res.status(400).json({ message: "Product creation failed" });

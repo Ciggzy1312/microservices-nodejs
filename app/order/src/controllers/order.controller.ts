@@ -21,7 +21,8 @@ const createOrderHandler = async (req: Request, res: Response) => {
 
 const getOrdersHandler = async (req: Request, res: Response) => {
     try {
-        const { orders, error } = await getOrders();
+        const { id } = req.user;
+        const { orders, error } = await getOrders(id);
         if (error) {
             log.error(error);
             return res.status(400).json({ message: error });

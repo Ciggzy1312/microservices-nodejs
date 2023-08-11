@@ -1,3 +1,5 @@
+import { OrderStatus } from "./enum";
+
 declare global {
     namespace Express {
         interface Request {
@@ -7,8 +9,8 @@ declare global {
 }
 
 export interface OrderInput {
-    name: string;
-    description: string;
-    price: string;
+    status: OrderStatus;
+    expiresAt: Date;
     createdBy: string;
+    productId: string;
 }
