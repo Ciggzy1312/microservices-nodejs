@@ -14,3 +14,15 @@ export const createProductSchema = z.object({
         invalid_type_error: "Price must be a number",
     })
 });
+
+export const updateProductSchema = z.object({
+    name: z.string({
+        invalid_type_error: "Name must be a string",
+    }).optional(),
+    description: z.string({
+        invalid_type_error: "Description must be a string",
+    }).optional(),
+    price: z.string({
+        invalid_type_error: "Price must be a number",
+    }).optional()
+});

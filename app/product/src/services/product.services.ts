@@ -36,3 +36,25 @@ export const getMyProducts = async (id: string) => {
         return { error: "Products fetching of logged in user failed" };
     }
 }
+
+export const getProduct = async (productId: string) => {
+    try {
+        const product = await Product.findById(productId);
+
+        return { product, error: null };
+    } catch (error: any) {
+        log.error(error.message);
+        return { error: "Product fetching failed" };
+    }
+}
+
+export const updateProduct = async (productId: string, input: ProductInput) => {
+    try {
+        const product = await Product.findByIdAndUpdate(productId, input, { new: true });
+
+        return { product, error: null };
+    } catch (error: any) {
+        log.error(error.message);
+        return { error: "Product updation failed" };
+    }
+}

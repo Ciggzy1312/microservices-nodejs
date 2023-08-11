@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { createProduct, getProducts, getMyProducts } from "../services/product.services";
+import { createProduct, getProducts, getMyProducts, getProduct, updateProduct } from "../services/product.services";
 import log from "../utils/logger";
 
 const createProductHandler = async (req: Request, res: Response) => {
@@ -28,7 +28,7 @@ const getProductsHandler = async (req: Request, res: Response) => {
         }
 
         log.info(`Products fetched successfully`);
-        return res.status(201).json({ message: "Products fetched successfully", products });
+        return res.status(200).json({ message: "Products fetched successfully", products });
     } catch (error) {
         log.error({ message: "Product fetching failed", error });
         res.status(400).json({ message: "Product fetching failed" });
@@ -45,11 +45,45 @@ const getMyProductsHandler = async (req: Request, res: Response) => {
         }
 
         log.info("Products fetched of logged in user successfully");
-        return res.status(201).json({ message: "Products fetched of logged in user successfully", products });
+        return res.status(200).json({ message: "Products fetched of logged in user successfully", products });
     } catch (error) {
         log.error({ message: "Product fetching of logged in user failed", error });
         res.status(400).json({ message: "Product fetching of logged in user failed" });
     }
 }
 
-export { createProductHandler, getProductsHandler, getMyProductsHandler }
+const getProductHandler = async (req: Request, res: Response) => {
+    try {
+        const { productId } = req.params;
+        const { product, error } = await getProduct(productId);
+        if (error) {
+            log.error(error);
+            return res.status(400).json({ message: error });
+        }
+
+        log.info(`Product fetched successfully`);
+        return res.status(200).json({ message: "Product fetched successfully", product });
+    } catch (error) {
+        log.error({ message: "Product fetching failed", error });
+        res.status(400).json({ message: "Product fetching failed" });
+    }
+}
+
+const updateProductHandler = async (req: Request, res: Response) => {
+    try {
+        const { productId } = req.params;
+        const { product, error } = await updateProduct(productId, req.body);
+        if (error) {
+            log.error(error);
+            return res.status(400).json({ message: error });
+        }
+
+        log.info(`Product updated successfully`);
+        return res.status(200).json({ message: "Product updated successfully", product });
+    } catch (error) {
+        log.error({ message: "Product updating failed", error });
+        res.status(400).json({ message: "Product updating failed" });
+    }
+}
+
+export { createProductHandler, getProductsHandler, getMyProductsHandler, getProductHandler, updateProductHandler }
