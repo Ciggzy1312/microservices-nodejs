@@ -56,3 +56,31 @@ export const getOrders = async (id: string) => {
         return { error: "Orders fetching failed" };
     }
 }
+
+export const getOrder = async (id: string, orderId: string) => {
+    try {
+        const order = await Order.findById(orderId).populate("productId").where("createdBy", id);
+        if (!order) {
+            return { error: "Order not found" };
+        }
+
+        return { order, error: null };
+    } catch (error: any) {
+        log.error(error.message);
+        return { error: "Order fetching failed" };        
+    }
+};
+
+export const cancelOrder = async (id: string, orderId: string) => {
+    try {
+        const order = await Order.findByIdAndUpdate(orderId, { status: OrderStatusEnum.Cancelled }, { new: true }).where("createdBy", id);
+        if (!order) {
+            return { error: "Order not found or not authorized to acces this order" };
+        }
+
+        return { order, error: null };
+    } catch (error: any) {
+        log.error(error.message);
+        return { error: "Order cancellation failed" };
+    }
+};

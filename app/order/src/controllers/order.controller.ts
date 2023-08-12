@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { createOrder, getOrders } from "../services/order.services";
+import { cancelOrder, createOrder, getOrder, getOrders } from "../services/order.services";
 import log from "../utils/logger";
 
 const createOrderHandler = async (req: Request, res: Response) => {
@@ -29,11 +29,47 @@ const getOrdersHandler = async (req: Request, res: Response) => {
         }
 
         log.info(`Orders fetched successfully`);
-        return res.status(201).json({ message: "Orders fetched successfully", orders });
+        return res.status(200).json({ message: "Orders fetched successfully", orders });
+    } catch (error) {
+        log.error({ message: "Orders fetching failed", error });
+        res.status(400).json({ message: "Orders fetching failed" });
+    }
+}
+
+const getOrderHandler = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.user;
+        const { orderId } = req.params;
+        const { order, error } = await getOrder(id, orderId);
+        if (error) {
+            log.error(error);
+            return res.status(400).json({ message: error });
+        }
+
+        log.info("Order fetched successfully");
+        return res.status(200).json({ message: "Order fetched successfully", order });
     } catch (error) {
         log.error({ message: "Order fetching failed", error });
         res.status(400).json({ message: "Order fetching failed" });
     }
 }
 
-export { createOrderHandler, getOrdersHandler }
+const cancelOrderHandler = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.user;
+        const { orderId } = req.params;
+        const { order, error } = await cancelOrder(id, orderId);
+        if (error) {
+            log.error(error);
+            return res.status(400).json({ message: error });
+        }
+
+        log.info("Order cancelled successfully");
+        return res.status(200).json({ message: "Order cancelled successfully", order });
+    } catch (error) {
+        log.error({ message: "Order cancellation failed", error });
+        res.status(400).json({ message: "Order cancellation failed" });
+    }
+}
+
+export { createOrderHandler, getOrdersHandler, getOrderHandler, cancelOrderHandler }
