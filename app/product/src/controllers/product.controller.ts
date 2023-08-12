@@ -71,8 +71,9 @@ const getProductHandler = async (req: Request, res: Response) => {
 
 const updateProductHandler = async (req: Request, res: Response) => {
     try {
+        const { id } = req.user;
         const { productId } = req.params;
-        const { product, error } = await updateProduct(productId, req.body);
+        const { product, error } = await updateProduct(id, productId, req.body);
         if (error) {
             log.error(error);
             return res.status(400).json({ message: error });

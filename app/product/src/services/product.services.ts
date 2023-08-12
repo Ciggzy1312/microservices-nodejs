@@ -48,9 +48,12 @@ export const getProduct = async (productId: string) => {
     }
 }
 
-export const updateProduct = async (productId: string, input: ProductInput) => {
+export const updateProduct = async (id: string, productId: string, input: ProductInput) => {
     try {
-        const product = await Product.findByIdAndUpdate(productId, input, { new: true });
+        const product = await Product.findByIdAndUpdate(productId, input, { new: true }).where({ createdBy: id });
+        if (!product) {
+            return { error: "Product not found or not authorized to access product" };
+        }
 
         return { product, error: null };
     } catch (error: any) {
