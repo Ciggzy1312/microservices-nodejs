@@ -1,18 +1,19 @@
-import amqp from 'amqplib';
 import log from '../../utils/logger';
+import { basePublisher } from './base.publisher';
 
-const connectURL = "amqp://rabbitmq-srv:5672";
-
-export async function productPublisher (queueName: string, data: any, message: string, errorMessage: string) {
+export async function productCreatedPublisher (queueName: string, data: any) {
     try {
-        const connection = await amqp.connect(connectURL);
-        const channel = await connection.createChannel();
+        const { message, error } = await basePublisher(queueName, data);
 
-        await channel.assertQueue(queueName);
-        await channel.sendToQueue(queueName, Buffer.from(JSON.stringify(data)));
+        if (error) {
+            log.info(error);
+            return;
+        }
 
         log.info(message);
+        return;
     } catch (error: any) {
-        log.error(errorMessage);
+        log.error(error.message);
+        return;
     }
 }
