@@ -1,8 +1,19 @@
 import { Product } from "../../models/product.model";
+import { ProductConsumerEnum } from "../../types/enum";
 import log from "../../utils/logger";
 
 
-export async function productCreatedConsumer (message: any) {
+export async function productConsumer (queueName: string, message: any) {
+    try {
+        if (queueName === ProductConsumerEnum.Created) {
+            await productCreatedConsumer(message);
+        }
+    } catch (error: any) {
+        log.error({ message: "Error while consuming product", error });
+    }
+}
+
+async function productCreatedConsumer (message: any) {
     try {
         const product = await Product.create({
             _id: message._id,

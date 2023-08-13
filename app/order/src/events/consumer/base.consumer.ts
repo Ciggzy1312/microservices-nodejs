@@ -1,6 +1,7 @@
 import amqp from 'amqplib';
 import log from '../../utils/logger';
-import { productCreatedConsumer } from './product.consumer';
+import { productConsumer } from './product.consumer';
+import { ConsumerTypeEnum } from '../../types/enum';
 
 const connectURL = "amqp://rabbitmq-srv:5672";
 
@@ -17,8 +18,8 @@ export async function baseConsumer (queueName: string) {
                 message = JSON.parse(msg.content.toString());
                 console.log("msg -> ", message);
 
-                if (queueName === "product.created") {
-                    await productCreatedConsumer(message);
+                if (queueName.split(":")[0] === ConsumerTypeEnum.Product) {
+                    await productConsumer(queueName, message);
                     channel.ack(msg);
                 }
             }
