@@ -1,14 +1,14 @@
 import log from "../utils/logger";
 import { ProductInput } from "../types/types";
 import { Product } from "../models/product.model";
-import { productCreatedPublisher } from "../events/publisher/product.publisher";
+import { productCreatedPublisher, productUpdatedPublisher } from "../events/publisher/product.publisher";
 
 export const createProduct = async (input: ProductInput, id: string) => {
     try {
         input.createdBy = id;
         const product = await Product.create(input);
 
-        await productCreatedPublisher("product.created", product);
+        await productCreatedPublisher(product);
 
         return { product, error: null };
     } catch (error: any) {
@@ -54,6 +54,8 @@ export const updateProduct = async (id: string, productId: string, input: Produc
         if (!product) {
             return { error: "Product not found or not authorized to access product" };
         }
+
+        await productUpdatedPublisher(product);
 
         return { product, error: null };
     } catch (error: any) {

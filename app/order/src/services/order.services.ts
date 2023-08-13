@@ -3,6 +3,7 @@ import { OrderInput } from "../types/types";
 import { Order } from "../models/order.model";
 import { Product } from "../models/product.model";
 import { OrderStatusEnum } from "../types/enum";
+import { orderCancelledPublisher, orderCreatedPublisher } from "../events/publisher/order.publisher";
 
 const EXPIRATION_TIME = 1 * 60;
 
@@ -38,6 +39,8 @@ export const createOrder = async (input: OrderInput, id: string) => {
 
         // Create the order
         const order = await Order.create(input);
+
+        await orderCreatedPublisher(order, productExists);
 
         return { order, error: null };
     } catch (error: any) {
@@ -77,6 +80,8 @@ export const cancelOrder = async (id: string, orderId: string) => {
         if (!order) {
             return { error: "Order not found or not authorized to acces this order" };
         }
+
+        await orderCancelledPublisher(order);
 
         return { order, error: null };
     } catch (error: any) {
