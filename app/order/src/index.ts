@@ -16,6 +16,7 @@ app.use(cookieParser());
 app.use(router);
 
 baseConsumer(ProductConsumerEnum.Created);
+baseConsumer(ProductConsumerEnum.Updated);
 
 app.listen(8002, async () => {
     log.info('Order service is running on port 8002');
