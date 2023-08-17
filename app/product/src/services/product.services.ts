@@ -50,10 +50,20 @@ export const getProduct = async (productId: string) => {
 
 export const updateProduct = async (id: string, productId: string, input: ProductInput) => {
     try {
-        const product = await Product.findByIdAndUpdate(productId, input, { new: true }).where({ createdBy: id });
-        if (!product) {
-            return { error: "Product not found or not authorized to access product" };
+        const productExist = await Product.findById(productId)
+        if (!productExist) {
+            return { error: "Product not found" };
         }
+
+        if (productExist.createdBy !== id) {
+            return { error: "Not authorized to access product" };
+        }
+
+        if (productExist.orderId) {
+            return { error: "Product is reserved, wait for it to expire" };
+        }
+
+        const product = await Product.findByIdAndUpdate(productId, input, { new: true });
 
         await productUpdatedPublisher(product);
 
