@@ -16,7 +16,6 @@ export async function baseConsumer (queueName: string) {
         await channel.consume(queueName, async (msg) => {
             if (msg) {
                 message = JSON.parse(msg.content.toString());
-                console.log("msg -> ", message);
 
                 if (queueName.split(":")[0] === ConsumerTypeEnum.Order) {
                     await orderConsumer(queueName, message);
