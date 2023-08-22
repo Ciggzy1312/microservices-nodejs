@@ -2,6 +2,10 @@ import mongoose from "mongoose";
 import { OrderStatusEnum } from "../types/enum";
 
 const orderSchema = new mongoose.Schema({
+    _id: {
+        type: String,
+        required: true,
+    },
     status: {
         type: String,
         required: true,
@@ -16,10 +20,6 @@ const orderSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    productId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Product',
-    },
-});
+},{ _id : false });
 
 export const Order = mongoose.model("Order", orderSchema);

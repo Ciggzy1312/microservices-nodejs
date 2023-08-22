@@ -8,3 +8,11 @@ export enum OrderStatusEnum {
 export enum PaymentPublisherEnum {
     Success = "payment:success",
 }
+
+export enum ConsumerTypeEnum {
+    Payment = "payment",
+}
+
+export enum OrderConsumerEnum {
+    Created = "payment:created",
+}
