@@ -3,6 +3,7 @@ import { PaymentInput } from "../types/types";
 import { Payment } from "../models/payment.model";
 import { Order } from "../models/order.model";
 import { OrderStatusEnum } from "../types/enum";
+import { paymentSuccessPublisher } from "../events/publisher/payment.publisher";
 
 export const createPayment = async (input: PaymentInput, id: string) => {
     try {
@@ -33,6 +34,7 @@ export const createPayment = async (input: PaymentInput, id: string) => {
         });
 
         // publish payment successfull event
+        await paymentSuccessPublisher(payment);
 
         return { payment, error: null };
 

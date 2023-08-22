@@ -4,3 +4,7 @@ export enum OrderStatusEnum {
     Completed = "completed",
     Cancelled = "cancelled",
 }
+
+export enum PaymentPublisherEnum {
+    Success = "payment:success",
+}
