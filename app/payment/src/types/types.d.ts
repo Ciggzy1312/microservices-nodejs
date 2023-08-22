@@ -8,4 +8,5 @@ declare global {
 
 export interface PaymentInput {
     orderId: string;
+    amount: string;
 }
