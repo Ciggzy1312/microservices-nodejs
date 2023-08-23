@@ -27,3 +27,26 @@ export async function paymentCreatedPublisher (order: any, product: any) {
         return;
     }
 }
+
+export async function paymentExpiredPublisher (order: any) {
+    try {
+        const queueName = PaymentPublisherEnum.Expired;
+
+        const data = {
+            _id: order._id,
+        }
+        
+        const { message, error } = await basePublisher(queueName, data);
+
+        if (error) {
+            log.info(error);
+            return;
+        }
+
+        log.info(message);
+        return;
+    } catch (error: any) {
+        log.error(error.message);
+        return;
+    }
+}

@@ -16,6 +16,7 @@ app.use(cookieParser());
 app.use(router);
 
 baseConsumer(OrderConsumerEnum.Created);
+baseConsumer(OrderConsumerEnum.Expired);
 
 app.listen(8004, async () => {
     log.info('Payment service is running on port 8004');

@@ -5,7 +5,7 @@ import { Product } from "../models/product.model";
 import { OrderStatusEnum } from "../types/enum";
 import { orderCancelledPublisher, orderCreatedPublisher } from "../events/publisher/order.publisher";
 import { expirationCreatedPublisher } from "../events/publisher/expiration.publisher";
-import { paymentCreatedPublisher } from "../events/publisher/payment.publisher";
+import { paymentCreatedPublisher, paymentExpiredPublisher } from "../events/publisher/payment.publisher";
 
 const EXPIRATION_TIME = 1 * 60;
 
@@ -94,6 +94,7 @@ export const updateOrder = async (id: string, orderId: string, orderStatus: Orde
         if (orderStatus === OrderStatusEnum.Cancelled) {
             order = await Order.findByIdAndUpdate(orderId, { status: orderStatus }, { new: true }).where("createdBy", id);
             await orderCancelledPublisher(order);
+            await paymentExpiredPublisher(order);
         } else {
             order = await Order.findByIdAndUpdate(orderId, { status: orderStatus }, { new: true }).where("createdBy", id);
         }

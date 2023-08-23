@@ -15,4 +15,5 @@ export enum ConsumerTypeEnum {
 
 export enum OrderConsumerEnum {
     Created = "payment:created",
+    Expired = "payment:expired",
 }
