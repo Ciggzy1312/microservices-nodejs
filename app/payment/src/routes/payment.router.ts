@@ -6,6 +6,6 @@ import authMiddleware from "../middlewares/authMiddleware";
 
 const router = express.Router();
 
-router.get("/api/payment", authMiddleware, validate(createPaymentSchema), createPaymentHandler);
+router.post("/api/payment", authMiddleware, validate(createPaymentSchema), createPaymentHandler);
 
 export default router;

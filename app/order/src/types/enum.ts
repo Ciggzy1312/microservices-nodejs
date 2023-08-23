@@ -14,6 +14,10 @@ export enum ExpirationPublisherEnum {
     Created = "expiration:created",
 }
 
+export enum PaymentPublisherEnum {
+    Created = "payment:created",
+}
+
 export enum ConsumerTypeEnum {
     Product = "product",
     Expiration = "expiration",

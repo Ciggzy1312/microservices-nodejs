@@ -5,6 +5,7 @@ import { Product } from "../models/product.model";
 import { OrderStatusEnum } from "../types/enum";
 import { orderCancelledPublisher, orderCreatedPublisher } from "../events/publisher/order.publisher";
 import { expirationCreatedPublisher } from "../events/publisher/expiration.publisher";
+import { paymentCreatedPublisher } from "../events/publisher/payment.publisher";
 
 const EXPIRATION_TIME = 1 * 60;
 
@@ -43,6 +44,7 @@ export const createOrder = async (input: OrderInput, id: string) => {
 
         await orderCreatedPublisher(order, productExists);
         await expirationCreatedPublisher(order);
+        await paymentCreatedPublisher(order, productExists);
 
         return { order, error: null };
     } catch (error: any) {
