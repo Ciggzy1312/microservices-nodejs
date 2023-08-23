@@ -19,18 +19,19 @@ export const createPayment = async (input: PaymentInput, id: string) => {
         }
 
         // check if order is not cancelled
-        if (order.status == OrderStatusEnum.Cancelled) {
+        if (order.status === OrderStatusEnum.Cancelled) {
             return { error: "Cannot pay for cancelled order" };
         }
 
         // check if amount is same as order price
         if (order.price !== input.amount) {
-            return { error: "APlease enter the correct amount" };
+            return { error: "Please enter the correct amount" };
         }
 
         // perform payment
         const payment = await Payment.create({
             orderId: input.orderId,
+            createdBy: id,
         });
 
         // publish payment successfull event

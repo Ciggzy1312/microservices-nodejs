@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
-import { cancelOrder, createOrder, getOrder, getOrders } from "../services/order.services";
+import { updateOrder, createOrder, getOrder, getOrders } from "../services/order.services";
 import log from "../utils/logger";
+import { OrderStatusEnum } from "../types/enum";
 
 const createOrderHandler = async (req: Request, res: Response) => {
     try {
@@ -58,7 +59,7 @@ const cancelOrderHandler = async (req: Request, res: Response) => {
     try {
         const { id } = req.user;
         const { orderId } = req.params;
-        const { order, error } = await cancelOrder(id, orderId);
+        const { order, error } = await updateOrder(id, orderId, OrderStatusEnum.Cancelled);
         if (error) {
             log.error(error);
             return res.status(400).json({ message: error });

@@ -21,6 +21,7 @@ export enum PaymentPublisherEnum {
 export enum ConsumerTypeEnum {
     Product = "product",
     Expiration = "expiration",
+    Payment = "payment",
 }
 
 export enum ProductConsumerEnum {
@@ -30,4 +31,8 @@ export enum ProductConsumerEnum {
 
 export enum ExpirationConsumerEnum {
     Completed = "expiration:completed",
+}
+
+export enum PaymentConsumerEnum {
+    Success = "payment:success",
 }

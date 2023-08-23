@@ -4,7 +4,11 @@ const paymentSchema = new mongoose.Schema({
     orderId: {
         type: String,
         required: true,
-    }
+    },
+    createdBy: {
+        type: String,
+        required: true,
+    },
 });
 
 export const Payment = mongoose.model("Payment", paymentSchema);

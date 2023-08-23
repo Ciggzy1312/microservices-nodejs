@@ -78,18 +78,30 @@ export const getOrder = async (id: string, orderId: string) => {
     }
 };
 
-export const cancelOrder = async (id: string, orderId: string) => {
+export const updateOrder = async (id: string, orderId: string, orderStatus: OrderStatusEnum) => {
     try {
-        const order = await Order.findByIdAndUpdate(orderId, { status: OrderStatusEnum.Cancelled }, { new: true }).where("createdBy", id);
-        if (!order) {
+        const orderExists = await Order.findById(orderId).where("createdBy", id);
+        if (!orderExists) {
             return { error: "Order not found or not authorized to acces this order" };
         }
 
-        await orderCancelledPublisher(order);
+        let order
+
+        if (orderExists.status === OrderStatusEnum.Completed) {
+            return { error: "Order is already completed" };
+        }
+
+        if (orderStatus === OrderStatusEnum.Cancelled) {
+            order = await Order.findByIdAndUpdate(orderId, { status: orderStatus }, { new: true }).where("createdBy", id);
+            await orderCancelledPublisher(order);
+        } else {
+            order = await Order.findByIdAndUpdate(orderId, { status: orderStatus }, { new: true }).where("createdBy", id);
+        }
+
 
         return { order, error: null };
     } catch (error: any) {
         log.error(error.message);
-        return { error: "Order cancellation failed" };
+        return { error: "Order status update failed" };
     }
 };
